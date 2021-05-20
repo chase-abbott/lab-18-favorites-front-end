@@ -35,7 +35,7 @@ class App extends Component {
               <Route path="/" exact={true}
                 render={routerProps => (
                   this.state.token
-                    ? <Home {...routerProps}/>
+                    ? <Home {...routerProps} userToken={this.state.token}/>
                     : <Redirect to="/auth"/>
                 
                 )}
