@@ -21,12 +21,12 @@ handleSearch = async () => {
     .set('Authorization', userToken)
     .query({ search: search });
   const updatedGifs = [...gifs, response.body];
-  this.setState({ gifs: updatedGifs });
+  this.setState({ gifs: response.body });
 }
 
 render() {
   const { gifs } = this.state;
-
+  console.log(gifs);
   return (
     <div className="Home">
       <div>
@@ -38,7 +38,7 @@ render() {
         {gifs.map(gif => {
           <li key={gif.id}>
             <p>Title</p>
-            <image src={gif.images.original}></image>
+            <image src={gif.images.url}></image>
             <p>Rating</p> 
           </li>;
         })}

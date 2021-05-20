@@ -1,3 +1,9 @@
 .Home {
-  
+  display: grid;
+  grid-template-rows: auto, 1fr;
+  justify-content: center;
+}
+
+.search {
+  justify-self: center;
 }
