@@ -1,9 +1,45 @@
 .Home {
   display: grid;
   grid-template-rows: auto, 1fr;
-  justify-content: center;
+  grid-template-columns: 1fr;
 }
 
 .search {
   justify-self: center;
+}
+ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+    margin: 0;
+    align-items: center;
+    padding: 10px;
+}
+
+li {
+  position: relative;
+}
+
+img {
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  object-fit: contain;
+  cursor: pointer;
+  border-radius: 5px;
+  
+}
+
+img:hover {
+  transform: translate(-1px, -1px) scale(1.1);
+  box-shadow: 2px 2px 2px gray;
+  border-radius: 10px;
+}
+
+.heart {
+  cursor: pointer;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
 }

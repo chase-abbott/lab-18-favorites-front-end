@@ -1,47 +1,62 @@
 import { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { addFavorite, getGifs } from '../Favorites-Api-Utils.js';
 import request from 'superagent';
 import './Home.css';
+import FavoritesPage from '../favorites/FavoritesPage.js';
+
+const WHITE_HEART = '🤍';
+const RED_HEART = '❤️';
 
 export default class Home extends Component {
   
 state = {
   search: '',
-  gifs: []
+  gifs: [],
+  favorites: []
 }
+
 
 handleSearchInput = ({ target }) => {
   this.setState({ search: target.value });
 }
 
 handleSearch = async () => {
-  const { search, gifs } = this.state;
+  const { search } = this.state;
   const { userToken } = this.props;
   const response = await request.get('/api/gifs')
     .set('Authorization', userToken)
     .query({ search: search });
-  const updatedGifs = [...gifs, response.body];
+ 
   this.setState({ gifs: response.body });
+}
+
+handleFavoriteAdd = async ({ target }) => {
+  const { favorites } = this.state;
+  const updateFavorites = [...favorites, target.value];
+  this.setState({ favorites: updateFavorites });
 }
 
 render() {
   const { gifs } = this.state;
-  console.log(gifs);
+  
   return (
     <div className="Home">
-      <div>
+      <div className="search">
         <input placeholder='Search for a Gif!' value={this.state.search} onChange={this.handleSearchInput}/>
         <button onClick={this.handleSearch} >Search!</button>
       </div>
         
       <ul>
-        {gifs.map(gif => {
+        {gifs.map(gif => (
           <li key={gif.id}>
-            <p>Title</p>
-            <image src={gif.images.url}></image>
-            <p>Rating</p> 
-          </li>;
-        })}
+            <img src={gif.images.original.url} alt={gif.title}></img>
+            <button onClick={this.handleFavoriteAdd} className="heart" value={gif.id}>
+              {this.state.favorites.find(item => item === gif.id)
+                ? RED_HEART
+                : WHITE_HEART}
+            </button>
+          </li>
+        ))}
         
       </ul>
 
