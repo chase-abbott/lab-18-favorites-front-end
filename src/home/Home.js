@@ -38,7 +38,7 @@ render() {
         {gifs.map(gif => {
           <li key={gif.id}>
             <p>Title</p>
-            <image src={gif.images.original}></image>
+            <image src={gif.images.url}></image>
             <p>Rating</p> 
           </li>;
         })}
