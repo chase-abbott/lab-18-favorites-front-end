@@ -13,23 +13,34 @@ import AuthPage from '../auth/AuthPage';
 
 class App extends Component {
 
+  state = {
+    user: null,
+    token: window.localStorage.getItem('TOKEN'),
+  }
+
+  handleUser = user => {
+    window.localStorage.setItem('TOKEN', user.token);
+    this.setState({ token: user.token, user: user });
+  }
+
   render() {
     return (
       <div className="App">
         <Router>
-          <Header/>
+          <Header />
           <main>
 
             <Switch>
               <Route path="/" exact={true}
                 render={routerProps => (
-                  <Home {...routerProps}/>
+                  <Home {...routerProps} />
                 )}
               />
 
               <Route path="/auth" exact={true}
                 render={routerProps => (
-                  <AuthPage {...routerProps}/>
+                  <AuthPage onUser={this.handleUser} {...routerProps} />
+
                 )}
               />
 
@@ -43,7 +54,7 @@ class App extends Component {
 
             </Switch>
           </main>
-          <Footer/>
+          <Footer />
         </Router>
       </div>
     );
