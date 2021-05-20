@@ -1,8 +1,8 @@
 import { Component } from 'react';
-import { addFavorite, getGifs } from '../Favorites-Api-Utils.js';
+import { addFavorite, deleteFavorite } from '../Favorites-Api-Utils.js';
 import request from 'superagent';
 import './Home.css';
-import FavoritesPage from '../favorites/FavoritesPage.js';
+
 
 const WHITE_HEART = '🤍';
 const RED_HEART = '❤️';
@@ -33,9 +33,19 @@ export default class Home extends Component {
   handleFavoriteAdd = async ({ target }) => {
     const { favorites, gifs } = this.state;
     const matchingGif = gifs.find(gif => gif.id === target.value);
-    const newFavorite = await addFavorite(matchingGif);
-    const updateFavorites = [...favorites, matchingGif];
-    this.setState({ favorites: updateFavorites });
+    const matchingFavorite = favorites.find(favorite => 
+    {if (favorite.id === target.value) return favorite;});
+    if (matchingFavorite) {
+      await deleteFavorite(matchingFavorite);
+      const filteredFavorites = favorites.filter(favorite => favorite.id !== matchingFavorite.id);
+      this.setState({ favorites: filteredFavorites });
+    }
+    if (matchingGif) {
+      await addFavorite(matchingGif);
+      const updateFavorites = [...favorites, matchingGif];
+      this.setState({ favorites: updateFavorites });
+    }
+
   }
 
   render() {

@@ -29,3 +29,18 @@ export async function addFavorite(favorite) {
     .send(favorite);
   return response.body;
 }
+
+export async function getFavorites() {
+  const response = await request
+    .get('/api/me/favorites')
+    .set('Authorization', window.localStorage.getItem('TOKEN'));
+  return response.body;
+}
+
+export async function deleteFavorite(favorite) {
+  const response = await request
+    .delete(`/api/favorites/${favorite.id}`)
+    .set('Authorization', window.localStorage.getItem('TOKEN'))
+    .send(favorite);
+  return response.body;
+}
