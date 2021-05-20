@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { addFavorite, deleteFavorite } from '../Favorites-Api-Utils.js';
+import { addFavorite, deleteFavorite, getFavorites } from '../Favorites-Api-Utils.js';
 import request from 'superagent';
 import './Home.css';
 
@@ -15,6 +15,10 @@ export default class Home extends Component {
     favorites: []
   }
 
+  componentDidMount = async () => {
+    const dbFavorites = await getFavorites();
+    this.setState({ favorites: dbFavorites });
+  }
 
   handleSearchInput = ({ target }) => {
     this.setState({ search: target.value });
@@ -32,15 +36,22 @@ export default class Home extends Component {
 
   handleFavoriteAdd = async ({ target }) => {
     const { favorites, gifs } = this.state;
-    const matchingGif = gifs.find(gif => gif.id === target.value);
-    const matchingFavorite = favorites.find(favorite => 
-    {if (favorite.id === target.value) return favorite;});
-    if (matchingFavorite) {
-      await deleteFavorite(matchingFavorite);
-      const filteredFavorites = favorites.filter(favorite => favorite.id !== matchingFavorite.id);
-      this.setState({ favorites: filteredFavorites });
-    }
-    if (matchingGif) {
+
+    const dbFavorites = await getFavorites();
+    
+    const matchingGif = gifs.find(gif => gif.url === target.value);
+    const matchingFavorite = dbFavorites.find(favorite => {
+      return favorites.find(f => f.url === favorite.url);
+    });
+
+    console.log(matchingFavorite);
+    console.log(matchingGif);
+    // if (matchingFavorite) {
+    //   await deleteFavorite(matchingFavorite);
+    //   const newDb = await getFavorites();
+    //   this.setState({ favorites: newDb });
+    // } else {
+    if (matchingGif){
       await addFavorite(matchingGif);
       const updateFavorites = [...favorites, matchingGif];
       this.setState({ favorites: updateFavorites });
@@ -63,7 +74,7 @@ export default class Home extends Component {
           {gifs.map(gif => (
             <li key={gif.id}>
               <img src={gif.images.original.url} alt={gif.title}></img>
-              <button onClick={this.handleFavoriteAdd} className="heart" value={gif.id}>
+              <button onClick={this.handleFavoriteAdd} className="heart" value={gif.url}>
                 {this.state.favorites.find(item => item.id === gif.id)
                   ? RED_HEART
                   : WHITE_HEART}

@@ -11,7 +11,6 @@ export default class FavoritesPage extends Component {
   
 state = {
   favorites: [],
-  gifs: []
 }
 
 componentDidMount = async () => {
@@ -20,20 +19,14 @@ componentDidMount = async () => {
   console.log(response);
 }
 
-handleFavoriteAdd = async ({ target }) => {
-  const { favorites, gifs } = this.state;
-  const matchingGif = gifs.find(gif => gif.id === target.value);
-  const matchingFavorite = favorites.find(favorite => favorite.id === target.value);
-  if (matchingFavorite) {
-    await deleteFavorite(matchingFavorite);
-    const filteredFavorites = favorites.filter(favorite => favorite.id !== matchingFavorite.id);
-    this.setState({ favorites: filteredFavorites });
-  }
-  if (matchingGif) {
-    await addFavorite(matchingGif);
-    const updateFavorites = [...favorites, matchingGif];
-    this.setState({ favorites: updateFavorites });
-  }
+handleFavoriteDelete = async ({ target }) => {
+  const { favorites } = this.state;
+  const matchingFavorite = favorites.find(favorite => favorite.url === target.value);
+ 
+  await deleteFavorite(matchingFavorite);
+  const filteredFavorites = favorites.filter(favorite => favorite.id !== matchingFavorite.id);
+  this.setState({ favorites: filteredFavorites });
+  
 }
 
 render() {
@@ -46,7 +39,7 @@ render() {
           {favorites.map(gif => (
             <li key={gif.id}>
               <img src={gif.images.original.url} alt={gif.title}></img>
-              <button onClick={this.handleFavoriteAdd} className="heart" value={gif.id}>
+              <button onClick={this.handleFavoriteDelete} className="heart" value={gif.url}>
                 {this.state.favorites.find(item => item.id === gif.id)
                   ? RED_HEART
                   : WHITE_HEART}
