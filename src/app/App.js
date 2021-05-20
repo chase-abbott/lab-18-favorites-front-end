@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom';
 import './App.css';
 import AuthPage from '../auth/AuthPage';
+import FavoritesPage from '../favorites/FavoritesPage';
 
 class App extends Component {
 
@@ -27,13 +28,16 @@ class App extends Component {
     return (
       <div className="App">
         <Router>
-          <Header />
+          <Header user={this.state.user} />
           <main>
 
             <Switch>
               <Route path="/" exact={true}
                 render={routerProps => (
-                  <Home {...routerProps} />
+                  this.state.token
+                    ? <Home {...routerProps}/>
+                    : <Redirect to="/auth"/>
+                
                 )}
               />
 
@@ -44,9 +48,11 @@ class App extends Component {
                 )}
               />
 
-              <Route path="/resources/:id"
+              <Route path="/favorites"
                 render={routerProps => (
-                  <div>Implement a page for id {routerProps.match.params.id}</div>
+                  this.state.token
+                    ? <FavoritesPage {...routerProps}/>
+                    : <Redirect to="/auth"/>
                 )}
               />
 
