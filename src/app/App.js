@@ -9,32 +9,50 @@ import {
   Redirect
 } from 'react-router-dom';
 import './App.css';
+import AuthPage from '../auth/AuthPage';
+import FavoritesPage from '../favorites/FavoritesPage';
 
 class App extends Component {
+
+  state = {
+    user: null,
+    token: window.localStorage.getItem('TOKEN'),
+  }
+
+  handleUser = user => {
+    window.localStorage.setItem('TOKEN', user.token);
+    this.setState({ token: user.token, user: user });
+  }
 
   render() {
     return (
       <div className="App">
         <Router>
-          <Header/>
+          <Header user={this.state.user} />
           <main>
 
             <Switch>
               <Route path="/" exact={true}
                 render={routerProps => (
-                  <Home {...routerProps}/>
+                  this.state.token
+                    ? <Home {...routerProps} userToken={this.state.token}/>
+                    : <Redirect to="/auth"/>
+                
                 )}
               />
 
-              <Route path="/resources" exact={true}
+              <Route path="/auth" exact={true}
                 render={routerProps => (
-                  <div>Implement a page of resources</div>
+                  <AuthPage onUser={this.handleUser} {...routerProps} />
+
                 )}
               />
 
-              <Route path="/resources/:id"
+              <Route path="/favorites"
                 render={routerProps => (
-                  <div>Implement a page for id {routerProps.match.params.id}</div>
+                  this.state.token
+                    ? <FavoritesPage {...routerProps}/>
+                    : <Redirect to="/auth"/>
                 )}
               />
 
@@ -42,7 +60,7 @@ class App extends Component {
 
             </Switch>
           </main>
-          <Footer/>
+          <Footer />
         </Router>
       </div>
     );
