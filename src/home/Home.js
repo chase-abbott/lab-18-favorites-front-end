@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { addFavorite, deleteFavorite, getFavorites } from '../Favorites-Api-Utils.js';
+import { addFavorite, getFavorites } from '../Favorites-Api-Utils.js';
 import request from 'superagent';
 import './Home.css';
 

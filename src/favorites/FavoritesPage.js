@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import './FavoritesPage.css';
-import { addFavorite, deleteFavorite, getFavorites } from '../Favorites-Api-Utils';
+import { deleteFavorite, getFavorites } from '../Favorites-Api-Utils';
 
 
 
